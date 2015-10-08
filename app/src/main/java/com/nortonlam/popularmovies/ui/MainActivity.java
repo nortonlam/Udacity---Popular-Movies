@@ -29,25 +29,7 @@ public class MainActivity extends AppCompatActivity {
         TheMovieDbApi theMovieDbApi = TheMovieDb.get();
         String apiKey = getResources().getString(R.string.themoviedb_key);
         Call<MovieResults> call = theMovieDbApi.getPopularMovieList(apiKey);
-        call.enqueue(new Callback<MovieResults>() {
-            @Override
-            public void onResponse(Response<MovieResults> response, Retrofit retrofit) {
-                int statusCode = response.code();
-                Log.d("MainActivity", "statusCode: " + statusCode);
-
-                MovieResults results = response.body();
-                List<Movie> movieList = results.getResults();
-                for (Movie movie : movieList) {
-                    Log.d("MainActivity", movie.toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                // Log error here since request failed
-                Log.d("MainActivity", t.toString());
-            }
-        });
+        call.enqueue(new MovieResultsCallback());
     }
 
     @Override
@@ -70,5 +52,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class MovieResultsCallback implements Callback<MovieResults> {
+        @Override
+        public void onResponse(Response<MovieResults> response, Retrofit retrofit) {
+            int statusCode = response.code();
+            Log.d("MainActivity", "statusCode: " + statusCode);
+
+            MovieResults results = response.body();
+            List<Movie> movieList = results.getResults();
+            for (Movie movie : movieList) {
+                Log.d("MainActivity", movie.toString());
+            }
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+            // Log error here since request failed
+            Log.d("MainActivity", t.toString());
+        }
     }
 }
