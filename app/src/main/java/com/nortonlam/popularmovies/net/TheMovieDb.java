@@ -14,7 +14,7 @@ import retrofit.Retrofit;
 public class TheMovieDb {
     // http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[YOUR API KEY]
 
-    private final static String BASE_URL = "http://api.themoviedb.org";
+    public final static String BASE_URL = "http://api.themoviedb.org";
 
     private static TheMovieDbApi _theMovieApi;
 

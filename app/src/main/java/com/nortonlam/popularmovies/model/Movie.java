@@ -147,6 +147,7 @@ public class Movie {
     public String toString() {
         return title;
     }
+}
 
 /*{
         "adult":false,
@@ -169,4 +170,3 @@ public class Movie {
             "vote_average":7.0,
             "vote_count":2494
     }*/
-}
