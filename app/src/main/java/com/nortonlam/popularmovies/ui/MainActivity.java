@@ -12,10 +12,10 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.nortonlam.popularmovies.PopularMoviesApplication;
 import com.nortonlam.popularmovies.R;
 import com.nortonlam.popularmovies.model.Movie;
 import com.nortonlam.popularmovies.model.MovieResults;
-import com.nortonlam.popularmovies.model.TmdbConfiguration;
 import com.nortonlam.popularmovies.net.TheMovieDb;
 import com.nortonlam.popularmovies.net.TheMovieDbApi;
 import com.squareup.picasso.Picasso;
@@ -30,12 +30,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
-    TmdbConfiguration _config;
-
-    @Bind(R.id.gridview)
-    GridView gridView;
-
-    private List<Movie> _movieList;
+    @Bind(R.id.gridview) GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +38,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-
-        TheMovieDbApi theMovieDbApi = TheMovieDb.get();
-        String apiKey = getResources().getString(R.string.themoviedb_key);
-
-        // Get image configuration
-        Call<TmdbConfiguration> call = theMovieDbApi.getConfiguration(apiKey);
-        call.enqueue(new ConfigurationCallback());
     }
 
     @Override
@@ -87,23 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUi(List<Movie> movieList) {
         gridView.setAdapter(new ImageAdapter(this, movieList));
-    }
-
-     class ConfigurationCallback implements Callback<TmdbConfiguration> {
-        @Override
-        public void onResponse(Response<TmdbConfiguration> response, Retrofit retrofit) {
-            int statusCode = response.code();
-            Log.d("ConfigurationCallback", "statusCode: " + statusCode);
-
-            _config = response.body();
-            Log.d("ConfigurationCallback", "image full path: " + _config.getImages().getFullBaseUrl());
-        }
-
-        @Override
-        public void onFailure(Throwable t) {
-            // Log error here since request failed
-            Log.d("MovieResultsCallback", t.toString());
-        }
     }
 
     class MovieResultsCallback implements Callback<MovieResults> {
@@ -162,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 posterImageView = (ImageView) convertView;
             }
 
-            String imageFullPath = _config.getImages().getFullBaseUrl() + movie.getPosterPath();
+            String imageFullPath = ((PopularMoviesApplication)getApplication()).getImageBaseUrl() + movie.getPosterPath();
             Log.d("MainActivity", "imageFullPath: " + imageFullPath);
 
             Picasso.with(_context).load(imageFullPath).into(posterImageView);
