@@ -110,6 +110,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class ImageAdapter extends BaseAdapter {
+        private static final int PADDING = 8;
+        private static final int POSTER_WIDTH = 300;
+        private static final int POSTER_HEIGHT = 450;
+
         private Context _context;
         private List<Movie> _movieList;
 
@@ -138,9 +142,9 @@ public class MainActivity extends AppCompatActivity {
             if (convertView == null) {
                 // if it's not recycled, initialize some attributes
                 posterImageView = new ImageView(_context);
-                posterImageView.setLayoutParams(new GridView.LayoutParams(300, 450));
+                posterImageView.setLayoutParams(new GridView.LayoutParams(POSTER_WIDTH, POSTER_HEIGHT));
                 posterImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                posterImageView.setPadding(8, 8, 8, 8);
+                posterImageView.setPadding(PADDING, PADDING, PADDING, PADDING);
 
             } else {
                 posterImageView = (ImageView) convertView;
