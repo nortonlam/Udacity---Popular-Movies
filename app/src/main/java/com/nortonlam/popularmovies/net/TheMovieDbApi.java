@@ -17,5 +17,5 @@ public interface TheMovieDbApi {
     Call<TmdbConfiguration> getConfiguration(@Query("api_key") String apiKey);
 
     @GET(VERSION + "/discover/movie?sort_by=popularity.desc")
-    Call<MovieResults> getPopularMovieList(@Query("api_key") String apiKey);
+    Call<MovieResults> getMovieListByPopularity(@Query("api_key") String apiKey);
 }
