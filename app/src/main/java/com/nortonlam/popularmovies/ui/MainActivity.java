@@ -1,6 +1,7 @@
 package com.nortonlam.popularmovies.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -30,7 +32,8 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
-    @Bind(R.id.gridview) GridView gridView;
+    @Bind(R.id.gridview) GridView _gridView;
+    private MovieSelected _clickListener = new MovieSelected();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        _clickListener = new MovieSelected();
+        _gridView.setOnItemClickListener(_clickListener);
     }
 
     @Override
@@ -74,7 +80,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUi(List<Movie> movieList) {
-        gridView.setAdapter(new ImageAdapter(this, movieList));
+        _gridView.setAdapter(new ImageAdapter(this, movieList));
+        _clickListener.setMovieList(movieList);
+    }
+
+    private void nextScreen(Movie movie) {
+        Intent detailntent = new Intent(this, DetailActivity.class);
+        detailntent.putExtra(Movie.PARAM_KEY, movie);
+        startActivity(detailntent);
     }
 
     class MovieResultsCallback implements Callback<MovieResults> {
@@ -139,6 +152,19 @@ public class MainActivity extends AppCompatActivity {
             Picasso.with(_context).load(imageFullPath).into(posterImageView);
 
             return posterImageView;
+        }
+    }
+
+    class MovieSelected implements AdapterView.OnItemClickListener {
+        private List<Movie> _movieList;
+
+        public void setMovieList(List<Movie> movieList) {
+            _movieList = movieList;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            nextScreen(_movieList.get(position));
         }
     }
 }

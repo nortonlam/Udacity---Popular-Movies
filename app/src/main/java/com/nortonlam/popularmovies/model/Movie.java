@@ -1,14 +1,24 @@
 package com.nortonlam.popularmovies.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by norton on 10/7/15.
  */
-public class Movie {
+public class Movie implements Parcelable {
+    public final static String PARAM_KEY = "movie";
+
+    private final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
     private long id;
     private String title;
     @SerializedName("original_title")
@@ -146,6 +156,67 @@ public class Movie {
 
     public String toString() {
         return title;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        boolean[] booleanArray = new boolean[2];
+        booleanArray[0] = video;
+        booleanArray[1] = adult;
+
+        dest.writeLong(id);
+        dest.writeString(title);
+        dest.writeString(originalTitle);
+        dest.writeString(overview);
+        dest.writeDouble(popularity);
+        dest.writeBooleanArray(booleanArray);
+        dest.writeString(backdropPath);
+        //dest.writeList(genreIdList);
+        dest.writeString(originalLanguage);
+        dest.writeString(DATE_FORMATTER.format(releaseDate));
+        dest.writeString(posterPath);
+        dest.writeString(voteAverage);
+        dest.writeString(voteCount);
+    }
+
+    public static final Parcelable.Creator<Movie> CREATOR
+            = new Parcelable.Creator<Movie>() {
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+    private Movie(Parcel in) {
+        boolean[] booleanArray = new boolean[2];
+
+        try {
+            id = in.readLong();
+            title = in.readString();
+            originalTitle = in.readString();
+            overview = in.readString();
+            popularity = in.readDouble();
+            in.readBooleanArray(booleanArray);
+            video = booleanArray[0];
+            adult = booleanArray[1];
+            backdropPath = in.readString();
+            //genreIdList = in.readList();
+            originalLanguage = in.readString();
+            releaseDate = DATE_FORMATTER.parse(in.readString());
+            posterPath = in.readString();
+            voteAverage = in.readString();
+            voteCount = in.readString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
 
