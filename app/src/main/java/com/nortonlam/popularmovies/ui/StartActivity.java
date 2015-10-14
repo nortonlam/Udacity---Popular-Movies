@@ -55,6 +55,9 @@ public class StartActivity extends Activity {
         public void onFailure(Throwable t) {
             // Log error here since request failed
             Log.d("MovieResultsCallback", t.toString());
+
+            MessageDialog dialog = MessageDialog.getInstance(getResources().getString(R.string.alert_title), getResources().getString(R.string.network_error));
+            dialog.show(getFragmentManager(), "alertDialog");
         }
     }
 }
