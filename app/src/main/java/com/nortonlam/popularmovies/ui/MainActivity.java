@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             if (convertView == null) {
                 // if it's not recycled, initialize some attributes
                 posterImageView = new ImageView(_context);
-                posterImageView.setLayoutParams(new GridView.LayoutParams(400, 400));
+                posterImageView.setLayoutParams(new GridView.LayoutParams(300, 450));
                 posterImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 posterImageView.setPadding(8, 8, 8, 8);
 
@@ -149,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
             String imageFullPath = ((PopularMoviesApplication)getApplication()).getImageBaseUrl() + movie.getPosterPath();
             Log.d("MainActivity", "imageFullPath: " + imageFullPath);
 
-            Picasso.with(_context).load(imageFullPath).into(posterImageView);
+            Picasso.with(_context).load(imageFullPath)
+                    .into(posterImageView);
 
             return posterImageView;
         }
