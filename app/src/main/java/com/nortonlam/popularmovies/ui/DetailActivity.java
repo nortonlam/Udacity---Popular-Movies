@@ -1,36 +1,23 @@
 package com.nortonlam.popularmovies.ui;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nortonlam.popularmovies.PopularMoviesApplication;
 import com.nortonlam.popularmovies.R;
 import com.nortonlam.popularmovies.model.Movie;
-import com.nortonlam.popularmovies.model.MovieResults;
-import com.nortonlam.popularmovies.net.TheMovieDb;
-import com.nortonlam.popularmovies.net.TheMovieDbApi;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
 
 public class DetailActivity extends AppCompatActivity {
     @Bind(R.id.titleTextView) TextView _titleTextView;
