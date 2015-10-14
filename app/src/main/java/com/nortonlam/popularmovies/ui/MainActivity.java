@@ -10,9 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 import com.nortonlam.popularmovies.PopularMoviesApplication;
 import com.nortonlam.popularmovies.R;
@@ -32,6 +34,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
+    @Bind(R.id.sortBySpinner) Spinner _sortBySpinner;
     @Bind(R.id.gridview) GridView _gridView;
     private MovieSelected _clickListener = new MovieSelected();
 
@@ -44,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         _clickListener = new MovieSelected();
         _gridView.setOnItemClickListener(_clickListener);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.sort_by, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _sortBySpinner.setAdapter(adapter);
     }
 
     @Override

@@ -12,6 +12,7 @@ import retrofit.http.Query;
  */
 public interface TheMovieDbApi {
     String SORT_BY_POPULARITY = "popularity.desc";
+    String SORT_BY_HIGHEST_RATED = "vote_average.desc";
 
     String VERSION = "/3";
 
