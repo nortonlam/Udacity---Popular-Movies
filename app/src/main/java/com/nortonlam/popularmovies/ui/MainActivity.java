@@ -24,6 +24,7 @@ import com.nortonlam.popularmovies.net.TheMovieDb;
 import com.nortonlam.popularmovies.net.TheMovieDbApi;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -36,7 +37,9 @@ import retrofit.Retrofit;
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.sortBySpinner) Spinner _sortBySpinner;
     @Bind(R.id.gridview) GridView _gridView;
+    private ImageAdapter _imageAdapter;
     private MovieSelected _clickListener = new MovieSelected();
+    String[] _sortByValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +51,29 @@ public class MainActivity extends AppCompatActivity {
         _clickListener = new MovieSelected();
         _gridView.setOnItemClickListener(_clickListener);
 
+        _imageAdapter = new ImageAdapter(this);
+        _gridView.setAdapter(_imageAdapter);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.sort_by, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _sortBySpinner.setAdapter(adapter);
+        _sortBySpinner.setOnItemSelectedListener(new SortBySelected());
+
+        _sortByValues = getResources().getStringArray(R.array.sort_by_values);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        refreshMovieList(_sortByValues[_sortBySpinner.getSelectedItemPosition()]);
+    }
+
+    private void refreshMovieList(String sortBy) {
         // Get popular movies list
         TheMovieDbApi theMovieDbApi = TheMovieDb.get();
         String apiKey = getResources().getString(R.string.themoviedb_key);
-        Call<MovieResults> call = theMovieDbApi.getMovieList(apiKey, TheMovieDbApi.SORT_BY_POPULARITY);
+        Call<MovieResults> call = theMovieDbApi.getMovieList(apiKey, sortBy);
         call.enqueue(new MovieResultsCallback());
     }
 
@@ -87,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUi(List<Movie> movieList) {
-        _gridView.setAdapter(new ImageAdapter(this, movieList));
+        _imageAdapter.setMovieList(movieList);
+        _imageAdapter.notifyDataSetChanged();
+
         _clickListener.setMovieList(movieList);
     }
 
@@ -95,6 +110,19 @@ public class MainActivity extends AppCompatActivity {
         Intent detailntent = new Intent(this, DetailActivity.class);
         detailntent.putExtra(Movie.PARAM_KEY, movie);
         startActivity(detailntent);
+    }
+
+    class SortBySelected implements AdapterView.OnItemSelectedListener {
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            refreshMovieList(_sortByValues[position]);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
     }
 
     class MovieResultsCallback implements Callback<MovieResults> {
@@ -124,8 +152,12 @@ public class MainActivity extends AppCompatActivity {
         private Context _context;
         private List<Movie> _movieList;
 
-        public ImageAdapter(Context context, List<Movie> movieList) {
+        public ImageAdapter(Context context) {
             _context = context;
+            _movieList = new ArrayList<Movie>();
+        }
+
+        public void setMovieList(List<Movie> movieList) {
             _movieList = movieList;
         }
 
