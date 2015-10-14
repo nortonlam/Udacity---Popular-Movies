@@ -193,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("MainActivity", "imageFullPath: " + imageFullPath);
 
             Picasso.with(_context).load(imageFullPath)
+                    .placeholder(R.drawable.posternotavailable)
                     .into(posterImageView);
 
             return posterImageView;
