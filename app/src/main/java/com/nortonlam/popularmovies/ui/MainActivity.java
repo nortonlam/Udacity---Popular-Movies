@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         // Get popular movies list
         TheMovieDbApi theMovieDbApi = TheMovieDb.get();
         String apiKey = getResources().getString(R.string.themoviedb_key);
-        Call<MovieResults> call = theMovieDbApi.getMovieListByPopularity(apiKey);
+        Call<MovieResults> call = theMovieDbApi.getMovieList(apiKey, TheMovieDbApi.SORT_BY_POPULARITY);
         call.enqueue(new MovieResultsCallback());
     }
 

@@ -11,11 +11,13 @@ import retrofit.http.Query;
  * Created by norton on 10/7/15.
  */
 public interface TheMovieDbApi {
+    String SORT_BY_POPULARITY = "popularity.desc";
+
     String VERSION = "/3";
 
     @GET(VERSION + "/configuration")
     Call<TmdbConfiguration> getConfiguration(@Query("api_key") String apiKey);
 
-    @GET(VERSION + "/discover/movie?sort_by=popularity.desc")
-    Call<MovieResults> getMovieListByPopularity(@Query("api_key") String apiKey);
+    @GET(VERSION + "/discover/movie")
+    Call<MovieResults> getMovieList(@Query("api_key") String apiKey, @Query("sort_by") String sortBy);
 }
