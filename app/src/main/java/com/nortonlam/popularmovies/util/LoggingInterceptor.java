@@ -9,7 +9,10 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 
 /**
- * Created by norton on 10/7/15.
+ * Created date: 10/7/15.
+ *
+ * Class to allow logging of Retrofit 2 calls so we can see actual URL being called.
+ * Copied from http://stackoverflow.com/questions/32514410/logging-with-retrofit-2
  */
 public class LoggingInterceptor implements Interceptor {
     private String _tag;

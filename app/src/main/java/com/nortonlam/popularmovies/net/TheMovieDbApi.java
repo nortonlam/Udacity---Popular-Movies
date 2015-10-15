@@ -8,12 +8,11 @@ import retrofit.http.GET;
 import retrofit.http.Query;
 
 /**
- * Created by norton on 10/7/15.
+ * Created by norton
+ *
+ * Created date: 10/7/15.
  */
 public interface TheMovieDbApi {
-    String SORT_BY_POPULARITY = "popularity.desc";
-    String SORT_BY_HIGHEST_RATED = "vote_average.desc";
-
     String VERSION = "/3";
 
     @GET(VERSION + "/configuration")

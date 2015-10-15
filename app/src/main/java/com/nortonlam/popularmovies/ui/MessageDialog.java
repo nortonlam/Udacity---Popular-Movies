@@ -5,10 +5,10 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 
-import com.nortonlam.popularmovies.R;
-
 /**
- * Created by norton on 10/14/15.
+ * Created by norton
+ *
+ * Created date: 10/14/15.
  */
 public class MessageDialog extends DialogFragment {
     public MessageDialog() {

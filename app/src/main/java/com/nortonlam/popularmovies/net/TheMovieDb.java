@@ -9,11 +9,11 @@ import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
 
 /**
- * Created by norton on 10/7/15.
+ * Created by norton
+ *
+ * Created date: 10/7/15.
  */
 public class TheMovieDb {
-    // http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=[YOUR API KEY]
-
     public final static String BASE_URL = "http://api.themoviedb.org";
 
     private static TheMovieDbApi _theMovieApi;
@@ -24,7 +24,7 @@ public class TheMovieDb {
 
     private TheMovieDb() {}
 
-    public static TheMovieDbApi get() {
+    public static TheMovieDbApi getApi() {
         return _theMovieApi;
     }
 
