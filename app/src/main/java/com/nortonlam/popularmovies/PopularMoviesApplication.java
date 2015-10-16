@@ -2,6 +2,7 @@ package com.nortonlam.popularmovies;
 
 import android.app.Application;
 
+import com.facebook.stetho.Stetho;
 import com.nortonlam.popularmovies.model.TmdbConfiguration;
 
 /**
@@ -9,6 +10,13 @@ import com.nortonlam.popularmovies.model.TmdbConfiguration;
  */
 public class PopularMoviesApplication extends Application {
     private TmdbConfiguration _config;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        Stetho.initializeWithDefaults(this);
+    }
 
     public void setConfig(TmdbConfiguration config) {
         _config = config;
