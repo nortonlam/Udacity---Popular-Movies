@@ -2,6 +2,7 @@ package com.nortonlam.popularmovies.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.gridview) GridView _gridView;
     private ImageAdapter _imageAdapter;
     private MovieSelected _clickListener = new MovieSelected();
-    String[] _sortByValues;
+    private String[]      _sortByValues;
+    private List<Movie>   _movieList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +62,18 @@ public class MainActivity extends AppCompatActivity {
         _sortBySpinner.setOnItemSelectedListener(new SortBySelected());
 
         _sortByValues = getResources().getStringArray(R.array.sort_by_values);
+        if (null != savedInstanceState) {
+            _movieList = (List<Movie>)savedInstanceState.get(Movie.PARAM_KEY);
+        }
+        else {
+            _movieList = new ArrayList<>();
+        }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        refreshMovieList(_sortByValues[_sortBySpinner.getSelectedItemPosition()]);
+    public void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        savedState.putParcelableArrayList(Movie.PARAM_KEY, (ArrayList<? extends Parcelable>)_movieList);
     }
 
     private void refreshMovieList(String sortBy) {
@@ -104,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         _imageAdapter.notifyDataSetChanged();
 
         _clickListener.setMovieList(movieList);
+
+        _movieList = movieList;
     }
 
     private void nextScreen(Movie movie) {
@@ -141,6 +150,11 @@ public class MainActivity extends AppCompatActivity {
         public void onFailure(Throwable t) {
             // Log error here since request failed
             Log.d("MovieResultsCallback", t.toString());
+
+            MessageDialog dialog = MessageDialog.getInstance(getResources().getString(R.string.alert_title), getResources().getString(R.string.network_error));
+            dialog.show(getFragmentManager(), "networkError");
+            
+            updateUi(_movieList);
         }
     }
 
