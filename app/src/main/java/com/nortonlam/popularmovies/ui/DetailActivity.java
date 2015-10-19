@@ -115,8 +115,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     class TrailerAdapter extends BaseAdapter {
-        @Bind(R.id.trailerNameTextView) TextView _trailerNameTextView;
-
         private Activity _context;
         private List<Video> _trailerList;
 
@@ -141,24 +139,32 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View layoutView, ViewGroup parent) {
             Video trailer = _trailerList.get(position);
 
-            LayoutInflater inflater = _context.getLayoutInflater();
-
-            //ButterKnife.bind(layoutView);
-
-            View layoutView;
-            if (null == convertView) {
+            ViewHolder holder;
+            if (null == layoutView) {
                 // if it's not recycled, initialize some attributes
+                LayoutInflater inflater = _context.getLayoutInflater();
                 layoutView = inflater.inflate(R.layout.listitem_trailer, null);
-                TextView trailerNameTextView = (TextView) layoutView.findViewById(R.id.trailerNameTextView);
-                trailerNameTextView.setText(trailer.getName());
+                holder = new ViewHolder(layoutView);
+                layoutView.setTag(holder);
             } else {
-                layoutView = convertView;
+                holder = (ViewHolder) layoutView.getTag();
             }
+
+            holder.trailerNameTextView.setText(trailer.getName());
 
             return layoutView;
         }
     }
+
+    static class ViewHolder {
+        @Bind(R.id.trailerNameTextView) TextView trailerNameTextView;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+    }
+
 }
