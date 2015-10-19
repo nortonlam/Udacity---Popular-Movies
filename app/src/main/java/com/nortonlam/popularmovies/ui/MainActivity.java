@@ -6,8 +6,6 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -35,10 +33,16 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 
+/**
+ * Created by norton
+ *
+ * Created date: 10/7/15.
+ */
 public class MainActivity extends AppCompatActivity {
     @Bind(R.id.sortBySpinner) Spinner _sortBySpinner;
-    @Bind(R.id.gridview) GridView _gridView;
-    private ImageAdapter _imageAdapter;
+    @Bind(R.id.gridview)      GridView _gridView;
+
+    private ImageAdapter  _imageAdapter;
     private MovieSelected _clickListener = new MovieSelected();
     private String[]      _sortByValues;
     private List<Movie>   _movieList;
@@ -77,33 +81,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshMovieList(String sortBy) {
-        // Get popular movies list
-        TheMovieDbApi theMovieDbApi = TheMovieDb.get();
+        TheMovieDbApi theMovieDbApi = TheMovieDb.getApi();
         String apiKey = getResources().getString(R.string.themoviedb_key);
+
         Call<MovieResults> call = theMovieDbApi.getMovieList(apiKey, sortBy);
         call.enqueue(new MovieResultsCallback());
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void updateUi(List<Movie> movieList) {
@@ -130,10 +112,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
-
+            // Do nothing
         }
     }
 
+    // Callback for getting movie list
     class MovieResultsCallback implements Callback<MovieResults> {
         @Override
         public void onResponse(Response<MovieResults> response, Retrofit retrofit) {
@@ -158,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Adapter to show movie list in gridview
     class ImageAdapter extends BaseAdapter {
         private static final int PADDING = 8;
         private static final int POSTER_WIDTH = 300;
@@ -168,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
         public ImageAdapter(Context context) {
             _context = context;
-            _movieList = new ArrayList<Movie>();
+            _movieList = new ArrayList<>();
         }
 
         public void setMovieList(List<Movie> movieList) {
@@ -214,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // What to do when a movie is selected
     class MovieSelected implements AdapterView.OnItemClickListener {
         private List<Movie> _movieList;
 

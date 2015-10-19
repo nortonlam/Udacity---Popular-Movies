@@ -17,14 +17,16 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 /**
- * Created by norton on 10/12/15.
+ * Created by norton
+ *
+ * Created date: 10/12/15.
  */
 public class StartActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        TheMovieDbApi theMovieDbApi = TheMovieDb.get();
+        TheMovieDbApi theMovieDbApi = TheMovieDb.getApi();
         String apiKey = getResources().getString(R.string.themoviedb_key);
 
         // Get image configuration
@@ -37,6 +39,7 @@ public class StartActivity extends Activity {
         startActivity(mainIntent);
     }
 
+    // Callback for getting configuration
     class ConfigurationCallback implements Callback<TmdbConfiguration> {
         @Override
         public void onResponse(Response<TmdbConfiguration> response, Retrofit retrofit) {

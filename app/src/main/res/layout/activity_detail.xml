@@ -1,111 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="@string/empty_string"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ImageView
+            android:id="@+id/posterImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/poster_image_alt" />
+
+        <TextView
+            android:id="@+id/synopsisLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/posterImageView"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/synopsis_label" />
+
+        <TextView
+            android:id="@+id/overviewTextView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/synopsisLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/empty_string" />
+
+        <LinearLayout
+            android:id="@+id/ratingsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/overviewTextView"
+            android:layout_below="@+id/overviewTextView"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/titleTextView"
+                android:id="@+id/ratingLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:text="@string/empty_string"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <ImageView
-                android:id="@+id/posterImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/titleTextView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:contentDescription="@string/poster_image_alt" />
+                android:text="@string/rating_label" />
 
             <TextView
-                android:id="@+id/synopsisLabel"
+                android:id="@+id/ratingTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/posterImageView"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:text="@string/synopsis_label" />
-
-            <TextView
-                android:id="@+id/overviewTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/synopsisLabel"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
                 android:text="@string/empty_string" />
+        </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/overviewTextView"
-                android:layout_below="@+id/overviewTextView"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:id="@+id/ratingsLayout">
-
-                <TextView
-                    android:id="@+id/ratingLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rating_label" />
-
-                <TextView
-                    android:id="@+id/ratingTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/empty_string"
-                    android:layout_marginLeft="5dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/overviewTextView"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:id="@+id/releaseDateLayout"
-                android:layout_below="@+id/ratingsLayout">
-
-                <TextView
-                    android:id="@+id/releaseDateLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/release_date_label" />
-
-                <TextView
-                    android:id="@+id/releaseDateTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/empty_string"
-                    android:layout_marginLeft="5dp" />
-            </LinearLayout>
+        <LinearLayout
+            android:id="@+id/releaseDateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/overviewTextView"
+            android:layout_below="@+id/ratingsLayout"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/releaseDateLabel"
                 android:layout_width="wrap_content"
-                android:layout_height="10dp"
-                android:text="@string/empty_string"
-                android:id="@+id/spacer"
-                android:layout_below="@+id/releaseDateLayout"
-                android:layout_centerHorizontal="true" />
+                android:layout_height="wrap_content"
+                android:text="@string/release_date_label" />
 
-        </RelativeLayout>
-    </ScrollView>
-</LinearLayout>
+            <TextView
+                android:id="@+id/releaseDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/empty_string" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/spacer"
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:layout_below="@+id/releaseDateLayout"
+            android:layout_centerHorizontal="true"
+            android:text="@string/empty_string" />
+
+    </RelativeLayout>
+</ScrollView>

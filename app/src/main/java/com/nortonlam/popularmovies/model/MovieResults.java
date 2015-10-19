@@ -5,7 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by norton on 10/7/15.
+ * Created by norton
+ *
+ * Created date: 10/7/15.
  */
 public class MovieResults {
     private int page;

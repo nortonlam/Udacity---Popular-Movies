@@ -12,11 +12,14 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by norton on 10/7/15.
+ * Created by norton
+ *
+ * Created date: 10/7/15.
  */
 public class Movie implements Parcelable {
     public final static String PARAM_KEY = "movie";
 
+    // Date format for serialization
     private final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     private long id;

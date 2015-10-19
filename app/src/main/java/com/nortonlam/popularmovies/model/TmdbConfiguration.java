@@ -16,25 +16,14 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 /**
- * Created by norton on 10/8/15.
+ * Created by norton
+ *
+ * Created date: 10/8/15.
  */
 public class TmdbConfiguration {
-    private static TmdbConfiguration _config;
-
     Images images;
     @SerializedName("change_keys")
     List<String> changeKeys;
-
-    public static void init(Context context) {
-    }
-
-    public static TmdbConfiguration getInstance() {
-        if (null == _config) {
-            throw new IllegalStateException("Configurtation not initialized.  Please call init() first.");
-        }
-
-        return _config;
-    }
 
     public Images getImages() {
         return images;

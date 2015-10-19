@@ -6,7 +6,9 @@ import com.facebook.stetho.Stetho;
 import com.nortonlam.popularmovies.model.TmdbConfiguration;
 
 /**
- * Created by norton on 10/12/15.
+ * Created by norton
+ *
+ * Created date: 10/12/15.
  */
 public class PopularMoviesApplication extends Application {
     private TmdbConfiguration _config;
@@ -22,6 +24,7 @@ public class PopularMoviesApplication extends Application {
         _config = config;
     }
 
+    // Return the base image url as defined by the TMDB configuration
     public String getImageBaseUrl() {
         return _config.getImages().getFullBaseUrl();
     }
