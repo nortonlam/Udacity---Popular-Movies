@@ -47,13 +47,21 @@
             android:layout_marginTop="5dp"
             android:text="@string/empty_string" />
 
-        <LinearLayout
-            android:id="@+id/ratingsLayout"
+        <ListView
+            android:id="@+id/trailerListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/overviewTextView"
             android:layout_below="@+id/overviewTextView"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp" />
+
+        <LinearLayout
+            android:id="@+id/ratingsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/trailerListView"
+            android:layout_below="@+id/trailerListView"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <TextView
