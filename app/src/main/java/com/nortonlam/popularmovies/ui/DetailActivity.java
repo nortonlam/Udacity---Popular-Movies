@@ -146,7 +146,7 @@ public class DetailActivity extends AppCompatActivity {
             if (null == layoutView) {
                 // if it's not recycled, initialize some attributes
                 LayoutInflater inflater = _context.getLayoutInflater();
-                layoutView = inflater.inflate(R.layout.listitem_trailer, null);
+                layoutView = inflater.inflate(R.layout.listitem_trailer, parent);
                 holder = new ViewHolder(layoutView);
                 layoutView.setTag(holder);
             } else {
