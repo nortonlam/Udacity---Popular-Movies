@@ -1,13 +1,13 @@
 package com.nortonlam.popularmovies.ui;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -77,6 +77,7 @@ public class DetailActivity extends AppCompatActivity {
         Log.d("DetailActivity", "trailer list size: " + trailerList.size());
 
         _trailerListView.setAdapter(new TrailerAdapter(this, trailerList));
+        _trailerListView.setOnItemClickListener(new PlayTrailer());
     }
 
     private void initTrailers(long movieId) {
@@ -167,4 +168,10 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    class PlayTrailer implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // Play video
+        }
+    }
 }
