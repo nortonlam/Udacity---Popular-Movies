@@ -44,7 +44,9 @@ public class DetailActivity extends AppCompatActivity {
         String imageFullPath = ((PopularMoviesApplication)getApplication()).getImageBaseUrl() + movie.getPosterPath();
         Log.d("MainActivity", "imageFullPath: " + imageFullPath);
 
-        Picasso.with(this).load(imageFullPath).into(_posterImageView);
+        Picasso.with(this).load(imageFullPath)
+                .placeholder(R.drawable.posternotavailable)
+                .into(_posterImageView);
     }
 
     @Override
