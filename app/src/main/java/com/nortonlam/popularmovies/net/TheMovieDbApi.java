@@ -1,6 +1,7 @@
 package com.nortonlam.popularmovies.net;
 
 import com.nortonlam.popularmovies.model.MovieResults;
+import com.nortonlam.popularmovies.model.ReviewResults;
 import com.nortonlam.popularmovies.model.TmdbConfiguration;
 import com.nortonlam.popularmovies.model.Video;
 import com.nortonlam.popularmovies.model.VideoResults;
@@ -26,4 +27,7 @@ public interface TheMovieDbApi {
 
     @GET(VERSION + "/movie/{id}/videos")
     Call<VideoResults> getMovieTrailers(@Path("id") long id, @Query("api_key") String apiKey);
+
+    @GET(VERSION + "/movie/{id}/reviews")
+    Call<ReviewResults> getMovieReviews(@Path("id") long id, @Query("api_key") String apiKey);
 }

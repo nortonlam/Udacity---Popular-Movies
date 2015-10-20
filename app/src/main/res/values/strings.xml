@@ -14,6 +14,7 @@
     <string name="rating_label">Rating:</string>
     <string name="release_date_label">Release date:</string>
     <string name="poster_image_alt">[Poster image]</string>
+    <string name="author">Author:</string>
 
     // Alerts
     <string name="alert_title">Alert</string>
