@@ -78,20 +78,22 @@
                 android:text="@string/empty_string" />
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/reviewListView"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/readReviewsButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/ratingsLayout"
             android:layout_below="@+id/ratingsLayout"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="10dp"
+            android:text="@string/read_reviews"
+            android:onClick="readReviews"/>
 
         <LinearLayout
             android:id="@+id/releaseDateLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/reviewListView"
-            android:layout_below="@+id/reviewListView"
+            android:layout_alignStart="@+id/readReviewsButton"
+            android:layout_below="@+id/readReviewsButton"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
