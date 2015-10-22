@@ -42,6 +42,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <provider
+            android:name=".db.FavoritesProvider"
+            android:authorities="com.nortonlam.popularmovies.db.Favorites" >
+        </provider>
+        <provider
+            android:name=".db.MoviesProvider"
+            android:authorities="com.nortonlam.popularmovies.db.Movies" >
+        </provider>
     </application>
 
 </manifest>

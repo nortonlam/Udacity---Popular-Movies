@@ -2,6 +2,7 @@ package com.nortonlam.popularmovies.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -45,24 +46,83 @@ public class Movie implements Parcelable {
     @SerializedName("vote_count")
     private String voteCount;
 
-    public long getId() {
-        return id;
+    public Movie(long id, String title) { //}, String originalTitle, String overview, double popularity, boolean video, boolean adult, String backdropPath, List<Integer> genreIdList, String originalLanguage, Date releaseDate, String posterPath, String voteAverage, String voteCount) {
+        this.id = id;
+        this.title = title;
+        this.originalTitle = originalTitle;
+        this.overview = overview;
+        this.popularity = popularity;
+        this.video = video;
+        this.adult = adult;
+        this.backdropPath = backdropPath;
+        this.genreIdList = genreIdList;
+        this.originalLanguage = originalLanguage;
+        this.releaseDate = releaseDate;
+        this.posterPath = posterPath;
+        this.voteAverage = voteAverage;
+        this.voteCount = voteCount;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public long getId() {
+        return id;
     }
 
     public String getTitle() {
         return title;
     }
 
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
     public String getOverview() {
         return overview;
     }
 
+    public double getPopularity() {
+        return popularity;
+    }
+
+    public boolean isVideo() {
+        return video;
+    }
+
+    public boolean isAdult() {
+        return adult;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public List<Integer> getGenreIdList() {
+        return genreIdList;
+    }
+
+    public String getOriginalLanguage() {
+        return originalLanguage;
+    }
+
     public Date getReleaseDate() {
         return releaseDate;
+    }
+
+    public String getReleaseDateString() {
+        if (null != releaseDate) {
+            return DATE_FORMATTER.format(releaseDate);
+        }
+        else {
+            return "";
+        }
+    }
+
+    public Date parseReleaseDate(String releaseDate) throws ParseException {
+        if (!TextUtils.isEmpty(releaseDate)) {
+            return DATE_FORMATTER.parse(releaseDate);
+        }
+        else {
+            return null;
+        }
     }
 
     public String getPosterPath() {
@@ -71,6 +131,10 @@ public class Movie implements Parcelable {
 
     public String getVoteAverage() {
         return voteAverage;
+    }
+
+    public String getVoteCount() {
+        return voteCount;
     }
 
     public String toString() {

@@ -2,6 +2,7 @@ package com.nortonlam.popularmovies.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,10 @@ import android.widget.Spinner;
 
 import com.nortonlam.popularmovies.PopularMoviesApplication;
 import com.nortonlam.popularmovies.R;
+import com.nortonlam.popularmovies.db.FavoritesProvider;
+import com.nortonlam.popularmovies.db.FavoritesTable;
+import com.nortonlam.popularmovies.db.MoviesProvider;
+import com.nortonlam.popularmovies.db.MoviesTable;
 import com.nortonlam.popularmovies.model.Movie;
 import com.nortonlam.popularmovies.model.MovieResults;
 import com.nortonlam.popularmovies.net.TheMovieDb;
@@ -39,6 +44,8 @@ import retrofit.Retrofit;
  * Created date: 10/7/15.
  */
 public class MainActivity extends AppCompatActivity {
+    private final static int FAVORITES_INDEX = 2;
+
     @Bind(R.id.sortBySpinner) Spinner _sortBySpinner;
     @Bind(R.id.gridview)      GridView _gridView;
 
@@ -77,15 +84,35 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
-        savedState.putParcelableArrayList(Movie.PARAM_KEY, (ArrayList<? extends Parcelable>)_movieList);
+        savedState.putParcelableArrayList(Movie.PARAM_KEY, (ArrayList<? extends Parcelable>) _movieList);
     }
 
     private void refreshMovieList(String sortBy) {
-        TheMovieDbApi theMovieDbApi = TheMovieDb.getApi();
-        String apiKey = getResources().getString(R.string.themoviedb_key);
+        if (_sortByValues[FAVORITES_INDEX].equals(sortBy)) {
+            // Get the locally saved favorites
+            Cursor c = getContentResolver().query(FavoritesProvider.BASE_PATH, null, null, null, null);
 
-        Call<MovieResults> call = theMovieDbApi.getMovieList(apiKey, sortBy);
-        call.enqueue(new MovieResultsCallback());
+            long id;
+            List<Movie> movieList = new ArrayList<>();
+            if (c.moveToFirst()) {
+                while (c.moveToNext()) {
+                    id = c.getLong(c.getColumnIndex(FavoritesTable.ID));
+                    movieList.add(MoviesTable.getMovie(this, id));
+                }
+            }
+
+            c.close();
+
+            updateUi(movieList);
+        }
+        else {
+            // Get the movie list from the web service
+            TheMovieDbApi theMovieDbApi = TheMovieDb.getApi();
+            String apiKey = getResources().getString(R.string.themoviedb_key);
+
+            Call<MovieResults> call = theMovieDbApi.getMovieList(apiKey, sortBy);
+            call.enqueue(new MovieResultsCallback());
+        }
     }
 
     private void updateUi(List<Movie> movieList) {
@@ -97,10 +124,18 @@ public class MainActivity extends AppCompatActivity {
         _movieList = movieList;
     }
 
+    private void updateDb(List<Movie> movieList) {
+        getContentResolver().delete(MoviesProvider.BASE_PATH, null, null);
+
+        for (Movie movie : movieList) {
+            getContentResolver().insert(MoviesProvider.BASE_PATH, MoviesTable.getContentValues(movie));
+        }
+    }
+
     private void nextScreen(Movie movie) {
-        Intent detailntent = new Intent(this, DetailActivity.class);
-        detailntent.putExtra(Movie.PARAM_KEY, movie);
-        startActivity(detailntent);
+        Intent detailIntent = new Intent(this, DetailActivity.class);
+        detailIntent.putExtra(Movie.PARAM_KEY, movie);
+        startActivity(detailIntent);
     }
 
     class SortBySelected implements AdapterView.OnItemSelectedListener {
@@ -126,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
             MovieResults results = response.body();
             List<Movie> movieList = results.getResults();
 
+            updateDb(movieList);
             updateUi(movieList);
         }
 
