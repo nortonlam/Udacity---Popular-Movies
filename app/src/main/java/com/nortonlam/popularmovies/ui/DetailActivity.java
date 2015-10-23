@@ -10,12 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nortonlam.popularmovies.PopularMoviesApplication;
 import com.nortonlam.popularmovies.R;
+import com.nortonlam.popularmovies.db.FavoritesProvider;
+import com.nortonlam.popularmovies.db.FavoritesTable;
 import com.nortonlam.popularmovies.model.Movie;
 import com.nortonlam.popularmovies.model.Video;
 import com.nortonlam.popularmovies.model.VideoResults;
@@ -43,6 +46,7 @@ import retrofit.Retrofit;
 public class DetailActivity extends AppCompatActivity {
     @Bind(R.id.titleTextView) TextView _titleTextView;
     @Bind(R.id.posterImageView) ImageView _posterImageView;
+    @Bind(R.id.favoritesButton) Button _favoritesButton;
     @Bind(R.id.overviewTextView) TextView _overviewTextView;
     @Bind(R.id.trailerListView) ListView _trailerListView;
     @Bind(R.id.ratingTextView) TextView _ratingTextView;
@@ -64,13 +68,13 @@ public class DetailActivity extends AppCompatActivity {
         setTitle(_movie.getTitle());
 
         _titleTextView.setText(_movie.getTitle());
+        initFavoritesButton(_movie.getId());
         _overviewTextView.setText(_movie.getOverview());
         initTrailers(_movie.getId());
         _ratingTextView.setText(_movie.getVoteAverage());
         _releaseDateTextView.setText(sdf.format(_movie.getReleaseDate()));
 
         String imageFullPath = ((PopularMoviesApplication)getApplication()).getImageBaseUrl() + _movie.getPosterPath();
-
         Picasso.with(this).load(imageFullPath)
                 .placeholder(R.drawable.posternotavailable)
                 .into(_posterImageView);
@@ -83,12 +87,34 @@ public class DetailActivity extends AppCompatActivity {
         _trailerListView.setOnItemClickListener(new PlayTrailer());
     }
 
+    private void initFavoritesButton(long movieId) {
+        if (!FavoritesTable.exists(this, movieId)) {
+            _favoritesButton.setText(getResources().getString(R.string.add_to_favorites));
+        }
+        else {
+            _favoritesButton.setText(getResources().getString(R.string.remove_from_favorites));
+        }
+    }
+
     private void initTrailers(long movieId) {
         TheMovieDbApi theMovieDbApi = TheMovieDb.getApi();
         String apiKey = getResources().getString(R.string.themoviedb_key);
 
         Call<VideoResults> call = theMovieDbApi.getMovieTrailers(movieId, apiKey);
         call.enqueue(new TrailerResultsCallback());
+    }
+
+    public void addRemoveFavorites(View view) {
+        if (!FavoritesTable.exists(this, _movie.getId())) {
+            getContentResolver().insert(FavoritesProvider.BASE_PATH, FavoritesTable.getContentValues(_movie.getId()));
+        }
+        else {
+            String[] movieIdArray = new String[1];
+            movieIdArray[0] = "" + _movie.getId();
+            getContentResolver().delete(FavoritesProvider.BASE_PATH, "movie_id = ?", movieIdArray);
+        }
+
+        initFavoritesButton(_movie.getId());
     }
 
     public void readReviews(View view) {

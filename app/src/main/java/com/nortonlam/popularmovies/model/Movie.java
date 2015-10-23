@@ -46,7 +46,9 @@ public class Movie implements Parcelable {
     @SerializedName("vote_count")
     private String voteCount;
 
-    public Movie(long id, String title) { //}, String originalTitle, String overview, double popularity, boolean video, boolean adult, String backdropPath, List<Integer> genreIdList, String originalLanguage, Date releaseDate, String posterPath, String voteAverage, String voteCount) {
+    public Movie(long id, String title, String originalTitle, String overview, double popularity, boolean video, boolean adult,
+                 String backdropPath, /*List<Integer> genreIdList,*/ String originalLanguage, Date releaseDate,
+                 String posterPath, String voteAverage, String voteCount) {
         this.id = id;
         this.title = title;
         this.originalTitle = originalTitle;
@@ -55,7 +57,7 @@ public class Movie implements Parcelable {
         this.video = video;
         this.adult = adult;
         this.backdropPath = backdropPath;
-        this.genreIdList = genreIdList;
+        //this.genreIdList = genreIdList;
         this.originalLanguage = originalLanguage;
         this.releaseDate = releaseDate;
         this.posterPath = posterPath;
@@ -116,7 +118,7 @@ public class Movie implements Parcelable {
         }
     }
 
-    public Date parseReleaseDate(String releaseDate) throws ParseException {
+    public static Date parseReleaseDate(String releaseDate) throws ParseException {
         if (!TextUtils.isEmpty(releaseDate)) {
             return DATE_FORMATTER.parse(releaseDate);
         }
@@ -161,7 +163,7 @@ public class Movie implements Parcelable {
         dest.writeString(backdropPath);
         //dest.writeList(genreIdList);
         dest.writeString(originalLanguage);
-        dest.writeString(DATE_FORMATTER.format(releaseDate));
+        dest.writeString(getReleaseDateString());
         dest.writeString(posterPath);
         dest.writeString(voteAverage);
         dest.writeString(voteCount);
@@ -193,7 +195,7 @@ public class Movie implements Parcelable {
             backdropPath = in.readString();
             //genreIdList = in.readList();
             originalLanguage = in.readString();
-            releaseDate = DATE_FORMATTER.parse(in.readString());
+            releaseDate = parseReleaseDate(in.readString());
             posterPath = in.readString();
             voteAverage = in.readString();
             voteCount = in.readString();

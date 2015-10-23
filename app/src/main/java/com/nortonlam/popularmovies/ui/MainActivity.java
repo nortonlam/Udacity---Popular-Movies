@@ -87,6 +87,13 @@ public class MainActivity extends AppCompatActivity {
         savedState.putParcelableArrayList(Movie.PARAM_KEY, (ArrayList<? extends Parcelable>) _movieList);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        refreshMovieList(_sortByValues[_sortBySpinner.getSelectedItemPosition()]);
+    }
+
     private void refreshMovieList(String sortBy) {
         if (_sortByValues[FAVORITES_INDEX].equals(sortBy)) {
             // Get the locally saved favorites
@@ -94,14 +101,16 @@ public class MainActivity extends AppCompatActivity {
 
             long id;
             List<Movie> movieList = new ArrayList<>();
-            if (c.moveToFirst()) {
-                while (c.moveToNext()) {
+            if ((null != c) && (c.moveToFirst())) {
+               do {
                     id = c.getLong(c.getColumnIndex(FavoritesTable.ID));
                     movieList.add(MoviesTable.getMovie(this, id));
-                }
+                }  while (c.moveToNext());
             }
 
-            c.close();
+            if (null != c) {
+                c.close();
+            }
 
             updateUi(movieList);
         }

@@ -8,6 +8,9 @@ import android.net.Uri;
 
 import com.nortonlam.popularmovies.model.Movie;
 
+import java.text.ParseException;
+import java.util.Date;
+
 /**
  * Created by norton
  * <p/>
@@ -16,19 +19,19 @@ import com.nortonlam.popularmovies.model.Movie;
 public class MoviesTable {
     public static final String TABLE_NAME = "movies";
 
-    public final static String ID = "movie_id";
-    public final static String TITLE = "title";
-    public final static String ORIGINAL_TITILE = "original_title";
-    public final static String OVERVIEW = "overview";
-    public final static String POPULARITY = "popularity";
-    public final static String VIDEO = "video";
-    public final static String ADULT = "adult";
-    public final static String BACKDROP_PATH = "backdrop_path";
+    public final static String ID               = "movie_id";
+    public final static String TITLE             = "title";
+    public final static String ORIGINAL_TITILE   = "original_title";
+    public final static String OVERVIEW          = "overview";
+    public final static String POPULARITY        = "popularity";
+    public final static String VIDEO             = "video";
+    public final static String ADULT             = "adult";
+    public final static String BACKDROP_PATH     = "backdrop_path";
     public final static String ORIGINAL_LANGUAGE = "original_language";
-    public final static String RELEASE_DATE = "release_date";
-    public final static String POSTER_PATH = "poster_path";
-    public final static String VOTE_AVERAGE = "vote_average";
-    public final static String VOTE_COUNT = "vote_count";
+    public final static String RELEASE_DATE      = "release_date";
+    public final static String POSTER_PATH       = "poster_path";
+    public final static String VOTE_AVERAGE      = "vote_average";
+    public final static String VOTE_COUNT        = "vote_count";
 
     private final static String CREATE_SQL =
             "CREATE TABLE " + TABLE_NAME + " (" +
@@ -45,9 +48,6 @@ public class MoviesTable {
                     POSTER_PATH + " text not null," +
                     VOTE_AVERAGE + " text not null," +
                     VOTE_COUNT + " text not null)";
-
-    private final static String DELETE_ALL_SQL =
-            "DELETE FROM TABLE " + TABLE_NAME;
 
     private SQLiteDatabase _db;
 
@@ -81,12 +81,34 @@ public class MoviesTable {
 
     public static Movie getMovie(Context context, long movieId) {
         Cursor c = context.getContentResolver().query(Uri.parse(MoviesProvider.URL + "/" + movieId), null, null, null, null);
-        if (c.moveToFirst()) {
-            long id = c.getLong(c.getColumnIndex(ID));
-            String title = c.getString(c.getColumnIndex(TITLE));
-            Movie movie = new Movie(id, title); //, originalTitle, overview, popularity, video, adult, backdropPath, originalLanguage, releaseDate, posterPath, voteAverage, voteCount);
+        if ((null != c) && (c.moveToFirst())) {
+            try {
+                long id = c.getLong(c.getColumnIndex(ID));
+                String title = c.getString(c.getColumnIndex(TITLE));
+                String originalTitle = c.getString(c.getColumnIndex(ORIGINAL_TITILE));
+                String overview = c.getString(c.getColumnIndex(OVERVIEW));
+                double popularity = c.getDouble(c.getColumnIndex(POPULARITY));
+                boolean video = c.getString(c.getColumnIndex(VIDEO)).equals("1");
+                boolean adult = c.getString(c.getColumnIndex(ADULT)).equals("1");
+                String backdropPath = c.getString(c.getColumnIndex(BACKDROP_PATH));
+                String originalLanguage = c.getString(c.getColumnIndex(ORIGINAL_LANGUAGE));
+                Date releaseDate = Movie.parseReleaseDate(c.getString(c.getColumnIndex(RELEASE_DATE)));
+                String posterPath = c.getString(c.getColumnIndex(POSTER_PATH));
+                String voteAverage = c.getString(c.getColumnIndex(VOTE_AVERAGE));
+                String voteCount = c.getString(c.getColumnIndex(VOTE_COUNT));
 
-            return movie;
+
+                return new Movie(id, title, originalTitle, overview, popularity,
+                        video, adult, backdropPath, originalLanguage, releaseDate, posterPath,
+                        voteAverage, voteCount);
+            }
+            catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (null != c) {
+            c.close();
         }
 
         throw new IllegalArgumentException("No movie with id '" + movieId + "'.");
