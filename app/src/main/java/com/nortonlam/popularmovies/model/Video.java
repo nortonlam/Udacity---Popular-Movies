@@ -25,6 +25,10 @@ public class Video {
         return name;
     }
 
+    public String getKey() {
+        return key;
+    }
+
     public boolean isTrailer() {
         return Type.Trailer.toString().equals(type);
     }

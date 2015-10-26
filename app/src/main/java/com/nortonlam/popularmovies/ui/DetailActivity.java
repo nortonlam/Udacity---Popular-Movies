@@ -2,6 +2,7 @@ package com.nortonlam.popularmovies.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -84,7 +85,7 @@ public class DetailActivity extends AppCompatActivity {
         Log.d("DetailActivity", "trailer list size: " + trailerList.size());
 
         _trailerListView.setAdapter(new TrailerAdapter(this, trailerList));
-        _trailerListView.setOnItemClickListener(new PlayTrailer());
+        _trailerListView.setOnItemClickListener(new PlayTrailer(trailerList));
     }
 
     private void initFavoritesButton(long movieId) {
@@ -204,9 +205,19 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     class PlayTrailer implements AdapterView.OnItemClickListener {
+        private List<Video> _trailerList;
+
+        PlayTrailer(List<Video> trailerList) {
+            _trailerList = trailerList;
+        }
+
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             // Play video
+            Intent intent = new  Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://www.youtube.com/watch?v=" + _trailerList.get(position).getKey()));
+
+            startActivity(intent);
         }
     }
 }
