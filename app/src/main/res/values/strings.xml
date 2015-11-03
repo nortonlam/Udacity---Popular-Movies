@@ -20,6 +20,8 @@
     <string name="reviews">Reviews</string>
     <string name="author">Author:</string>
 
+    <string name="share">Share</string>
+
     // Alerts
     <string name="alert_title">Alert</string>
     <string name="network_error">Problem connecting to the network.  Please try again later.</string>

@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -54,6 +59,7 @@ public class DetailActivity extends AppCompatActivity {
     @Bind(R.id.releaseDateTextView) TextView _releaseDateTextView;
 
     private Movie _movie;
+    private ShareActionProvider _shareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +85,39 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.with(this).load(imageFullPath)
                 .placeholder(R.drawable.posternotavailable)
                 .into(_posterImageView);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate menu resource file.
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+
+        // Locate MenuItem with ShareActionProvider
+        MenuItem menuItem = menu.findItem(R.id.menu_item_share);
+
+        // Fetch and store ShareActionProvider
+        _shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
+        ShareCompat.IntentBuilder builder = ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setText("https://www.youtube.com/watch?v=2p7bgMxewxA");
+        Intent shareIntent =  builder.getIntent();
+
+        Intent.createChooser(shareIntent, "title");
+        //Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        //shareIntent.setType("text/plain");
+        //shareIntent.putExtra(Intent.EXTRA_TEXT, "https://www.youtube.com/watch?v=2p7bgMxewxA");
+        setShareIntent(shareIntent);
+
+        // Return true to display menu
+        return true;
+    }
+
+    // Call to update the share intent
+    private void setShareIntent(Intent shareIntent) {
+        if (null != _shareActionProvider) {
+            _shareActionProvider.setShareIntent(shareIntent);
+        }
     }
 
     private void updateUi(List<Video> trailerList) {
