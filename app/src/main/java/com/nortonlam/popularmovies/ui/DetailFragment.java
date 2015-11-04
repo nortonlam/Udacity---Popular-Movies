@@ -2,6 +2,7 @@ package com.nortonlam.popularmovies.ui;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.nortonlam.popularmovies.PopularMoviesApplication;
 import com.nortonlam.popularmovies.R;
+import com.nortonlam.popularmovies.db.FavoritesProvider;
 import com.nortonlam.popularmovies.db.FavoritesTable;
 import com.nortonlam.popularmovies.model.Movie;
 import com.nortonlam.popularmovies.model.Video;
@@ -49,12 +51,9 @@ public class DetailFragment extends Fragment {
     @Bind(R.id.favoritesButton) Button _favoritesButton;
     @Bind(R.id.overviewTextView) TextView _overviewTextView;
     @Bind(R.id.trailerListView) ListView _trailerListView;
+    @Bind(R.id.readReviewsButton) Button _readReviewsbutton;
     @Bind(R.id.ratingTextView) TextView _ratingTextView;
     @Bind(R.id.releaseDateTextView) TextView _releaseDateTextView;
-
-    private Movie _movie;
-
-    private Activity _context;
 
     public DetailFragment() {
 
@@ -68,40 +67,34 @@ public class DetailFragment extends Fragment {
 
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH);
 
-        _movie = getArguments().getParcelable(Movie.PARAM_KEY);
+        Movie movie = getArguments().getParcelable(Movie.PARAM_KEY);
 
-        _titleTextView.setText(_movie.getTitle());
-        initFavoritesButton(_movie.getId());
-        _overviewTextView.setText(_movie.getOverview());
-        initTrailers(_movie.getId());
-        _ratingTextView.setText(_movie.getVoteAverage());
-        _releaseDateTextView.setText(sdf.format(_movie.getReleaseDate()));
+        _titleTextView.setText(movie.getTitle());
+        _favoritesButton.setOnClickListener(new AddRemoveFavorites(getActivity(), movie));
+        initFavoritesButton(movie.getId());
+        _overviewTextView.setText(movie.getOverview());
+        _readReviewsbutton.setOnClickListener(new ReadReviews(getActivity(), movie));
+        initTrailers(movie.getId());
+        _ratingTextView.setText(movie.getVoteAverage());
+        _releaseDateTextView.setText(sdf.format(movie.getReleaseDate()));
 
-        String imageFullPath = ((PopularMoviesApplication)_context.getApplicationContext()).getImageBaseUrl() + _movie.getPosterPath();
-        Picasso.with(_context).load(imageFullPath)
+        String imageFullPath = ((PopularMoviesApplication)getActivity().getApplicationContext()).getImageBaseUrl() + movie.getPosterPath();
+        Picasso.with(getActivity()).load(imageFullPath)
                 .placeholder(R.drawable.posternotavailable)
                 .into(_posterImageView);
 
         return fragmentView;
     }
 
-    @Override
-    public void onAttach(Activity activity)
-    {
-        super.onAttach(activity);
-
-        _context = activity;
-    }
-
     private void updateUi(List<Video> trailerList) {
         Log.d("DetailActivity", "trailer list size: " + trailerList.size());
 
-        _trailerListView.setAdapter(new TrailerAdapter(_context, trailerList));
+        _trailerListView.setAdapter(new TrailerAdapter(getActivity(), trailerList));
         _trailerListView.setOnItemClickListener(new PlayTrailer(trailerList));
     }
 
     private void initFavoritesButton(long movieId) {
-        if (!FavoritesTable.exists(_context, movieId)) {
+        if (!FavoritesTable.exists(getActivity(), movieId)) {
             _favoritesButton.setText(getResources().getString(R.string.add_to_favorites));
         }
         else {
@@ -115,6 +108,48 @@ public class DetailFragment extends Fragment {
 
         Call<VideoResults> call = theMovieDbApi.getMovieTrailers(movieId, apiKey);
         call.enqueue(new TrailerResultsCallback());
+    }
+
+
+    class AddRemoveFavorites implements View.OnClickListener {
+        private Context _context;
+        private Movie _movie;
+
+        AddRemoveFavorites(Context context, Movie movie) {
+            _context = context;
+            _movie = movie;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (!FavoritesTable.exists(_context, _movie.getId())) {
+                _context.getContentResolver().insert(FavoritesProvider.BASE_PATH, FavoritesTable.getContentValues(_movie.getId()));
+            }
+            else {
+                String[] movieIdArray = new String[1];
+                movieIdArray[0] = "" + _movie.getId();
+                _context.getContentResolver().delete(FavoritesProvider.BASE_PATH, "movie_id = ?", movieIdArray);
+            }
+
+            initFavoritesButton(_movie.getId());
+        }
+    }
+
+    class ReadReviews implements View.OnClickListener {
+        private Context _context;
+        private Movie _movie;
+
+        ReadReviews(Context context, Movie movie) {
+            _context = context;
+            _movie = movie;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent reviewsIntent = new Intent(_context, ReviewsActivity.class);
+            reviewsIntent.putExtra(Movie.PARAM_KEY, _movie);
+            startActivity(reviewsIntent);
+        }
     }
 
     class TrailerResultsCallback implements Callback<VideoResults> {

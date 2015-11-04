@@ -33,8 +33,7 @@
             android:id="@+id/favoritesButton"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/posterImageView"
-            android:layout_marginTop="20dp"
-            android:onClick="addRemoveFavorites"/>
+            android:layout_marginTop="20dp"/>
 
         <TextView
             android:id="@+id/synopsisLabel"
@@ -95,8 +94,7 @@
             android:layout_alignStart="@+id/ratingsLayout"
             android:layout_below="@+id/ratingsLayout"
             android:layout_marginTop="10dp"
-            android:text="@string/read_reviews"
-            android:onClick="readReviews"/>
+            android:text="@string/read_reviews"/>
 
         <LinearLayout
             android:id="@+id/releaseDateLayout"

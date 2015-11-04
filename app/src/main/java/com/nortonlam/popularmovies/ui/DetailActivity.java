@@ -76,23 +76,4 @@ public class DetailActivity extends AppCompatActivity {
             _shareActionProvider.setShareIntent(shareIntent);
         }
     }
-
-    public void addRemoveFavorites(View view) {
-        if (!FavoritesTable.exists(this, _movie.getId())) {
-            getContentResolver().insert(FavoritesProvider.BASE_PATH, FavoritesTable.getContentValues(_movie.getId()));
-        }
-        else {
-            String[] movieIdArray = new String[1];
-            movieIdArray[0] = "" + _movie.getId();
-            getContentResolver().delete(FavoritesProvider.BASE_PATH, "movie_id = ?", movieIdArray);
-        }
-
-        //initFavoritesButton(_movie.getId());
-    }
-
-    public void readReviews(View view) {
-        Intent reviewsIntent = new Intent(this, ReviewsActivity.class);
-        reviewsIntent.putExtra(Movie.PARAM_KEY, _movie);
-        startActivity(reviewsIntent);
-    }
 }
