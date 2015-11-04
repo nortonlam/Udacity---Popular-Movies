@@ -58,6 +58,10 @@ public class MainFragment extends Fragment {
 
     private Context _context;
 
+    public MainFragment() {
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_main, container, false);
