@@ -56,8 +56,6 @@ public class MainFragment extends Fragment {
     private String[]      _sortByValues;
     private List<Movie>   _movieList;
 
-    private Context _context;
-
     public MainFragment() {
 
     }
@@ -71,10 +69,10 @@ public class MainFragment extends Fragment {
         _clickListener = new MovieSelected();
         _gridView.setOnItemClickListener(_clickListener);
 
-        _imageAdapter = new ImageAdapter(_context);
+        _imageAdapter = new ImageAdapter(getActivity());
         _gridView.setAdapter(_imageAdapter);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(_context, R.array.sort_by, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.sort_by, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _sortBySpinner.setAdapter(adapter);
         _sortBySpinner.setOnItemSelectedListener(new SortBySelected());
@@ -88,14 +86,6 @@ public class MainFragment extends Fragment {
         }
 
         return fragmentView;
-    }
-
-    @Override
-    public void onAttach(Activity activity)
-    {
-        super.onAttach(activity);
-
-        _context = activity;
     }
 
     @Override
@@ -114,14 +104,14 @@ public class MainFragment extends Fragment {
     private void refreshMovieList(String sortBy) {
         if (_sortByValues[FAVORITES_INDEX].equals(sortBy)) {
             // Get the locally saved favorites
-            Cursor c = _context.getContentResolver().query(FavoritesProvider.BASE_PATH, null, null, null, null);
+            Cursor c = getActivity().getContentResolver().query(FavoritesProvider.BASE_PATH, null, null, null, null);
 
             long id;
             List<Movie> movieList = new ArrayList<>();
             if ((null != c) && (c.moveToFirst())) {
                do {
                     id = c.getLong(c.getColumnIndex(FavoritesTable.ID));
-                    movieList.add(MoviesTable.getMovie(_context, id));
+                    movieList.add(MoviesTable.getMovie(getActivity(), id));
                 }  while (c.moveToNext());
             }
 
@@ -151,15 +141,15 @@ public class MainFragment extends Fragment {
     }
 
     private void updateDb(List<Movie> movieList) {
-        _context.getContentResolver().delete(MoviesProvider.BASE_PATH, null, null);
+        getActivity().getContentResolver().delete(MoviesProvider.BASE_PATH, null, null);
 
         for (Movie movie : movieList) {
-            _context.getContentResolver().insert(MoviesProvider.BASE_PATH, MoviesTable.getContentValues(movie));
+            getActivity().getContentResolver().insert(MoviesProvider.BASE_PATH, MoviesTable.getContentValues(movie));
         }
     }
 
     private void nextScreen(Movie movie) {
-        Intent detailIntent = new Intent(_context, DetailActivity.class);
+        Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
         detailIntent.putExtra(Movie.PARAM_KEY, movie);
         startActivity(detailIntent);
     }
